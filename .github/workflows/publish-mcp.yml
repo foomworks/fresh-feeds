@@ -30,17 +30,26 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download mcp-publisher
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
           ARCH="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
           URL="https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_${OS}_${ARCH}.tar.gz"
           echo "Fetching $URL"
           curl -fsSL "$URL" | tar xz mcp-publisher
-          ./mcp-publisher --version || true
-      - name: Login (GitHub OIDC → io.github.foomworks namespace) and publish
+          chmod +x ./mcp-publisher
+          echo "--- mcp-publisher version ---"; ./mcp-publisher --version || true
+          echo "--- mcp-publisher help ---";    ./mcp-publisher --help || true
+      - name: Show server.json
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           test -f server.json || { echo "::error::server.json missing at repo root"; exit 1; }
+          echo "--- server.json being published ---"; cat server.json
+      - name: Login (GitHub OIDC → io.github.foomworks namespace)
+        run: |
+          set -euxo pipefail
           ./mcp-publisher login github-oidc
+      - name: Publish to the official MCP Registry
+        run: |
+          set -euxo pipefail
           ./mcp-publisher publish
           echo "Published server.json to the official MCP Registry."
