@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.foomworks/fresh-feeds",
+  "description": "Continuously-maintained, machine-readable data + trust feeds for AI agents: the MCP server registry (deduped, quality-scored) and the x402 services catalog's liveness-probed active edge, plus per-server trust verification. Free search/preview; full feeds paid per call via x402 (USDC on Base), no account.",
+  "version": "1.1.0",
+  "repository": {
+    "url": "https://github.com/foomworks/fresh-feeds",
+    "source": "github"
+  },
+  "websiteUrl": "https://foomworks.app/fresh-feeds/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://fresh-feeds.foomworks.workers.dev/mcp"
+    }
+  ]
+}
