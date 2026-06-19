@@ -1,0 +1,46 @@
+name: publish-mcp-registry
+
+# Publishes server.json to the official MCP Registry (registry.modelcontextprotocol.io) under the
+# io.github.foomworks namespace. This workflow runs INSIDE the public repo foomworks/fresh-feeds, so
+# `mcp-publisher login github-oidc` derives the namespace from THIS repo's owner (foomworks) — no
+# secret, no exposure of any other identity. The file is maintained from the FOOM brain via the
+# publish-public-repo sync (work/public-repos/foomworks-fresh-feeds/.github/workflows/publish-mcp.yml).
+#
+# server.json (repo root) declares name=io.github.foomworks/fresh-feeds + the live /mcp remote, so the
+# listing points agents straight at the running server. Once listed, the discovery directories
+# (Glama / PulseMCP / Smithery) crawl the official registry and pick us up automatically.
+#
+# Note: syncing this file into foomworks/fresh-feeds requires FOOMWORKS_REPO_TOKEN to carry the
+# `Workflows` write permission (HUMAN_INBOX #39 option A); content-only syncs do not.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "server.json"
+      - ".github/workflows/publish-mcp.yml"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # required for mcp-publisher's github-oidc login (no secret)
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download mcp-publisher
+        run: |
+          set -euo pipefail
+          OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          ARCH="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
+          URL="https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_${OS}_${ARCH}.tar.gz"
+          echo "Fetching $URL"
+          curl -fsSL "$URL" | tar xz mcp-publisher
+          ./mcp-publisher --version || true
+      - name: Login (GitHub OIDC → io.github.foomworks namespace) and publish
+        run: |
+          set -euo pipefail
+          test -f server.json || { echo "::error::server.json missing at repo root"; exit 1; }
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish
+          echo "Published server.json to the official MCP Registry."
