@@ -1,7 +1,7 @@
 # fresh-feeds
 
-**Continuously-maintained, machine-readable data + trust feeds for AI agents.**
-No account, no API key — free preview/search + per-call paid access via [x402](https://x402.org) (USDC on Base).
+**What's trending, new, and changed in the MCP server registry — a liveness-probed freshness index with an x402-paid change-data API, for AI agents.**
+No account, no API key — free preview/search + a per-call paid `changes` feed via [x402](https://x402.org) (USDC on Base).
 
 🌐 Live: **https://fresh-feeds.foomworks.workers.dev** · 🔌 MCP: **`https://fresh-feeds.foomworks.workers.dev/mcp`** · 🧭 https://foomworks.app/fresh-feeds/
 
@@ -9,7 +9,7 @@ No account, no API key — free preview/search + per-call paid access via [x402]
 
 ## What it gives an agent
 
-- **MCP server registry** — the [Model Context Protocol](https://modelcontextprotocol.io) server registry, deduplicated and **quality-scored**, refreshed every 30 minutes. Find a good server for a capability, or poll what changed.
+- **MCP registry freshness + change-data** — the [Model Context Protocol](https://modelcontextprotocol.io) server registry, deduplicated and **quality-scored**, refreshed every 30 minutes. Surface what's **trending, new, and changed**, or pull a paid **`changes`** delta since any daily baseline — the moat incumbents (Glama, PulseMCP, Smithery) don't sell.
 - **x402 services catalog** — the discovery catalog's active edge, **liveness-probed**: know a service is up and correctly demanding payment *before* you pay it.
 - **Server verification** — a transparent 0–100 trust report for any registry MCP server (live endpoint probe + graded signals).
 
@@ -39,7 +39,8 @@ Free tools return data directly; paid tools return x402 payment instructions for
 
 ```bash
 BASE=https://fresh-feeds.foomworks.workers.dev
-curl -s "$BASE/feeds/mcp-registry/preview"                 # free: top 10 by quality score
+curl -s "$BASE/feeds/mcp-registry/preview?ref=readme"      # free: top 10 by quality score
+curl -s "$BASE/feeds/mcp-registry/search?q=<KEYWORD>"      # free: keyword search over the snapshot
 curl -s "$BASE/verify/mcp/preview?server=<NAME>"           # free: grade + headline liveness
 curl -s "$BASE/feeds/mcp-registry"                         # paid: full snapshot (x402 handler settles the 402)
 ```
