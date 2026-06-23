@@ -1,6 +1,6 @@
 ---
 name: mcp-server-registry
-description: Find, rank, and verify MCP servers; discover live x402-payable services
+description: Trending/new/changed MCP servers + live x402 services — a freshness-ranked, liveness-probed index with an x402-paid change-data API
 metadata:
   openclaw:
     requires:
@@ -12,10 +12,12 @@ license: MIT
 
 # MCP Server Registry & x402 Service Discovery (fresh-feeds)
 
-Use this skill when a task needs to **find, rank, or verify MCP servers**, or to **discover live
-x402-payable services**. The MCP registry is deduplicated and **quality-scored**, and an x402
-services catalog is **liveness-probed** — both refreshed every 30 minutes, so you get current,
-ranked, machine-readable data instead of crawling raw registries yourself.
+Use this skill to track **trending, new, and changed MCP servers** and to **discover live
+x402-payable services** — and to find, rank, or verify a specific MCP server. The registry is
+deduplicated and **quality-scored**, the x402 catalog is **liveness-probed**, and both refresh
+every 30 minutes; a paid **`changes` API** returns exactly what was added/removed/re-scored since
+any day. You get current, ranked, machine-readable data — including the deltas no other index
+exposes — instead of crawling raw registries yourself.
 
 Base URL: `https://fresh-feeds.foomworks.workers.dev`
 
